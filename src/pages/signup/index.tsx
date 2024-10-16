@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { signUp } from "@/libs/axios/auth/auth";
+import { useAuth } from "@/contexts/AuthProvider";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/images/logo.svg";
@@ -18,17 +21,21 @@ export default function SignupPage() {
     mode: "onChange",
   });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuth();
 
   const onSubmit = async (data) => {
-    setLoading(true); // 로딩 상태 true로 변경
-    console.log(data);
+    setLoading(true);
+    const { email, password } = data;
+    const isSignUpSuccess = await signUp(data);
 
-    // 서버에 데이터 전송 등의 추가 로직 작성
-    // 여기에 데이터를 전송하고 로딩 상태를 false로 변경하는 로직을 추가하세요.
-    setTimeout(() => {
-      setLoading(false); // 로딩 상태를 false로 변경
-    }, 2000); // 예시로 2초 후에 로딩 종료
-    alert("전송버튼클릭");
+    if (isSignUpSuccess) {
+      await login({ email, password });
+      router.push("/");
+      return;
+    }
+    setLoading(false);
+    alert("회원가입 실패");
   };
   const validatePassword = (value) => {
     const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/; // 숫자, 영문, 특수문자 포함 및 최소 8자
