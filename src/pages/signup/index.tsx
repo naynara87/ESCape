@@ -47,7 +47,8 @@ export default function SignupPage() {
 
   const passwordValue = watch("password");
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
 
   return (
     <div className="mt-[200px] max-w-[640px] text-white p-3 mx-auto">
@@ -68,7 +69,7 @@ export default function SignupPage() {
             {...register("email", {
               required: "이메일은 필수 입력입니다.",
               pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 message: "이메일 형식으로 작성해 주세요.",
               },
             })}
@@ -144,14 +145,14 @@ export default function SignupPage() {
           <label className="block pb-1">비밀번호 확인</label>
           <div className="relative">
             <input
-              type={showPasswordConfirm ? "text" : "password"}
+              type={showPasswordConfirmation ? "text" : "password"}
               className={`bg-brand-black-medium w-full rounded-xl border-solid ${
-                errors.passwordConfirm
+                errors.passwordConfirmation
                   ? "border-red-500"
                   : "border-brand-black-light"
               } py-4 px-6 text-brand-gray-dark focus:outline-blue-gradation`}
               placeholder="비밀번호를 다시 입력해주세요"
-              {...register("passwordConfirm", {
+              {...register("passwordConfirmation", {
                 required: "비밀번호 확인을 입력해주세요.",
                 validate: (value) =>
                   value === passwordValue || "비밀번호가 일치하지 않습니다.",
@@ -160,25 +161,27 @@ export default function SignupPage() {
             <button
               type="button"
               className="absolute right-5 top-4"
-              onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+              onClick={() =>
+                setShowPasswordConfirmation(!showPasswordConfirmation)
+              }
               aria-label={
-                showPasswordConfirm ? "비밀번호 숨기기" : "비밀번호 보이기"
+                showPasswordConfirmation ? "비밀번호 숨기기" : "비밀번호 보이기"
               }
             >
               <Image
                 width={25}
-                src={showPasswordConfirm ? EyesShowIcon : EyesHiddenIcon}
+                src={showPasswordConfirmation ? EyesShowIcon : EyesHiddenIcon}
                 alt={
-                  showPasswordConfirm
+                  showPasswordConfirmation
                     ? "비밀번호 숨기기 아이콘"
                     : "비밀번호 보이기 아이콘"
                 }
               />
             </button>
           </div>
-          {errors.passwordConfirm && (
+          {errors.passwordConfirmation && (
             <p className="text-red-500 text-sm mt-2">
-              {errors.passwordConfirm.message}
+              {errors.passwordConfirmation.message}
             </p>
           )}
         </div>
